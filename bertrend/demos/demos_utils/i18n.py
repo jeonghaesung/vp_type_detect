@@ -29,10 +29,10 @@ TRANSLATIONS = {
 }
 
 # Available languages
-LANGUAGES = {"fr": "Français", "en": "English"}
+LANGUAGES = {"fr": "Français", "en": "English", "ko": "한국어"}
 
 # Default language
-DEFAULT_LANGUAGE = "en"
+DEFAULT_LANGUAGE = "ko"
 
 
 def get_current_internationalization_language() -> str:
@@ -52,7 +52,7 @@ def create_internationalization_language_selector() -> None:
     """Create a language selector widget in the sidebar."""
     current_lang = get_current_internationalization_language()
     selected_lang = st.sidebar.selectbox(
-        "Language / Langue",
+        translate("language_selector"),
         options=list(LANGUAGES.keys()),
         format_func=lambda x: LANGUAGES[x],
         index=list(LANGUAGES.keys()).index(current_lang),
