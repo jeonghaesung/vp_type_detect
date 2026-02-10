@@ -7,6 +7,7 @@ TRANSLATIONS = {
     "app_title": {
         "fr": "BERTrend - Démo d'analyse de sujets",
         "en": "BERTrend - Topic Analysis demo",
+        "ko": "BERTrend - 토픽 분석 데모",
     },
     "data_distribution": {
         "fr": "Distribution des données",
@@ -19,6 +20,7 @@ TRANSLATIONS = {
     "save_model": {
         "fr": "Sauvegarder le modèle",
         "en": "Save Model",
+        "ko": "모델 저장",
     },
     "enter_model_name": {
         "fr": "Entrez un nom pour le modèle (optionnel) :",
@@ -35,6 +37,7 @@ TRANSLATIONS = {
     "train_model": {
         "fr": "Entraîner le modèle",
         "en": "Train Model",
+        "ko": "모델 학습",
     },
     "review_settings_help": {
         "fr": "Assurez-vous de vérifier les paramètres avant de cliquer sur ce bouton.",
@@ -47,34 +50,42 @@ TRANSLATIONS = {
     "topic_analysis_demo_title": {
         "fr": ":part_alternation_mark: Démo d'analyse de sujets",
         "en": ":part_alternation_mark: Topic analysis demo",
+        "ko": ":part_alternation_mark: 토픽 분석 데모",
     },
     "data_loading_training": {
         "fr": "Chargement des données & entraînement du modèle",
         "en": "Data loading & model training",
+        "ko": "데이터 로딩 및 모델 학습",
     },
     "topic_exploration": {
         "fr": "Exploration des sujets",
         "en": "Topic exploration",
+        "ko": "토픽 탐색",
     },
     "topic_visualization": {
         "fr": "Visualisation des sujets",
         "en": "Topic visualization",
+        "ko": "토픽 시각화",
     },
     "temporal_visualization": {
         "fr": "Visualisation temporelle",
         "en": "Temporal visualization",
+        "ko": "시계열 시각화",
     },
     "newsletter_generation": {
         "fr": "Génération de newsletter",
         "en": "Newsletter generation",
+        "ko": "뉴스레터 생성",
     },
     "topic_analysis": {
         "fr": "Analyse de sujets",
         "en": "Topic Analysis",
+        "ko": "토픽 분석",
     },
     "application_example": {
         "fr": "Exemple d'application",
         "en": "Application example",
+        "ko": "활용 예시",
     },
     "embeddings_cache_info": {
         "fr": "Les embeddings ne sont pas sauvegardés dans le cache et ne sont donc pas chargés. Veuillez vous assurer d'entraîner le modèle sans utiliser les embeddings en cache si vous souhaitez des visualisations temporelles correctes et fonctionnelles.",

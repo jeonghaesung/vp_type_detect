@@ -49,6 +49,9 @@ FRENCH_EMBEDDING_MODELS = [
     "dangvantuan/sentence-camembert-large",
     "antoinelouis/biencoder-distilcamembert-mmarcoFR",
 ]
+KOREAN_EMBEDDING_MODELS = [
+    "Qwen/Qwen3-Embedding-4B",
+]
 
 # MODEL REPRESENTATIONS
 MMR_REPRESENTATION_MODEL = "MaximalMarginalRelevance"
@@ -57,7 +60,7 @@ OPENAI_REPRESENTATION_MODEL = "OpenAI"
 
 # BERTopic Hyperparameters
 BERTOPIC_SERIALIZATION = "safetensors"  # or pickle
-LANGUAGES = ["French", "English"]
+LANGUAGES = ["French", "English", "Korean"]
 REPRESENTATION_MODELS = [
     MMR_REPRESENTATION_MODEL,
     KEYBERTINSPIRED_REPRESENTATION_MODEL,

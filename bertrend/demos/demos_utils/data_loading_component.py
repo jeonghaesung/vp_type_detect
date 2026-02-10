@@ -3,6 +3,7 @@
 #  SPDX-License-Identifier: MPL-2.0
 #  This file is part of BERTrend.
 from pathlib import Path
+from shutil import copy2
 from tempfile import TemporaryDirectory
 
 import pandas as pd
@@ -48,6 +49,23 @@ FORMAT_ICONS = {
     "jsonl.gz": JSON_ICON,
 }
 
+
+
+
+DEMO_SAMPLE_DATA_PATH = (
+    Path(__file__).resolve().parent.parent / "topic_analysis" / "sample_data"
+)
+
+
+def _sync_demo_samples_to_data_path() -> None:
+    """Copy bundled demo samples into DATA_PATH so they can be selected in the UI."""
+    target_dir = DATA_PATH / "demo_samples"
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    for sample_file in DEMO_SAMPLE_DATA_PATH.glob("*.csv"):
+        destination = target_dir / sample_file.name
+        if not destination.exists():
+            copy2(sample_file, destination)
 
 @st.dialog(translate("column_selection"))
 def _select_alternative_columns(df: pd.DataFrame, message: str = ""):
@@ -154,6 +172,7 @@ def display_data_loading_component():
     state variable "time_filtered_df".
     """
     # Data loading section
+    _sync_demo_samples_to_data_path()
     st.header(translate("data_loading"))
 
     # Find files in the current directory and subdirectories
@@ -185,6 +204,8 @@ def display_data_loading_component():
             format_func=lambda x: FORMAT_ICONS[x.suffix.lstrip(".")] + " " + str(x),
             on_change=save_widget_state,
         )
+
+    st.caption(translate("demo_sample_data_info"))
 
     if (
         not SessionStateManager.get("uploaded_files", [])
