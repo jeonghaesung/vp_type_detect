@@ -42,18 +42,24 @@ class BaseAgentFactory:
         base_url: str = None,
     ):
         self.model_name = model_name or os.getenv("OPENAI_DEFAULT_MODEL")
-        self.api_key = api_key if api_key is not None else os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            logger.error(
-                "WARNING: OPENAI_API_KEY environment variable not found. Please set it before using OpenAI services."
-            )
-            raise EnvironmentError("OPENAI_API_KEY environment variable not found.")
         self.base_url = (
             base_url if base_url is not None else os.getenv("OPENAI_BASE_URL")
         )
-
         if self.base_url == "":  # check empty env var
             self.base_url = None
+
+        self.api_key = api_key if api_key is not None else os.getenv("OPENAI_API_KEY")
+        if not self.api_key:
+            if self.base_url:
+                self.api_key = "EMPTY"
+                logger.warning(
+                    "OPENAI_API_KEY is empty; using dummy key for local OpenAI-compatible endpoint."
+                )
+            else:
+                logger.error(
+                    "WARNING: OPENAI_API_KEY environment variable not found. Please set it before using OpenAI services."
+                )
+                raise EnvironmentError("OPENAI_API_KEY environment variable not found.")
         self._init_model()
 
     def _init_model(self):

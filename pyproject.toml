@@ -38,6 +38,7 @@ dependencies = [
     "loguru (>=0.7.3)",
     "lxml-html-clean (>=0.2.2)",
     "markdown (>=3.7)",
+    "mecab-python3 (>=1.0.10)",
     "nltk (>=3.9.1)",
     "openai (>=1.77.0)",
     "openai-agents[litellm] (>=0.4.0)",

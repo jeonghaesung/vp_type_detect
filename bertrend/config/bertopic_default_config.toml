@@ -2,7 +2,7 @@
 
 # Global parameters
 [global]
-language = "French"
+language = "Korean"
 
 # BERTopic parameters: https://maartengr.github.io/BERTopic/api/bertopic.html#bertopic._bertopic.BERTopic.__init__
 [bertopic_model]
@@ -32,7 +32,7 @@ prediction_data = true
 [vectorizer_model]
 ngram_range = [1, 2]
 stop_words = true # If true, will check `language` parameter and load associated stopwords file
-min_df = 2
+min_df = 1
 
 # ClassTfidfTransformer: https://maartengr.github.io/BERTopic/api/ctfidf.html
 [ctfidf_model]

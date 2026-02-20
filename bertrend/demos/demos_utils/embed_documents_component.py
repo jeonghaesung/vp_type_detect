@@ -3,6 +3,7 @@
 #  SPDX-License-Identifier: MPL-2.0
 #  This file is part of BERTrend.
 import streamlit as st
+from urllib.parse import urlparse
 
 from bertrend.demos.demos_utils.i18n import translate
 from bertrend.demos.demos_utils.icons import SUCCESS_ICON
@@ -27,9 +28,17 @@ def display_embed_documents_component():
                     embedding_dtype=embedding_dtype,
                 )
             else:
+                embedding_service_url = SessionStateManager.get("embedding_service_url")
+                parsed_url = urlparse(embedding_service_url or "")
+                if not (parsed_url.scheme and parsed_url.netloc):
+                    raise ValueError(
+                        translate("invalid_remote_embedding_url").format(
+                            url=embedding_service_url
+                        )
+                    )
                 embedding_service = EmbeddingService(
                     local=False,
-                    url=SessionStateManager.get("embedding_service_url"),
+                    url=embedding_service_url,
                 )
                 SessionStateManager.set(
                     "embedding_model_name", embedding_service.embedding_model_name

@@ -74,17 +74,25 @@ class OpenAI_Client:
         EnvironmentError
             If api_key is None and OPENAI_API_KEY environment variable is not set.
         """
-        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            logger.error(
-                "WARNING: OPENAI_API_KEY environment variable not found. Please set it before using OpenAI services."
-            )
-            raise EnvironmentError("OPENAI_API_KEY environment variable not found.")
         self.base_url = (base_url or os.getenv("OPENAI_BASE_URL")) or None
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
+
+        # Allow OpenAI-compatible local endpoints to use a dummy key
+        if not self.api_key:
+            if self.base_url:
+                self.api_key = "EMPTY"
+                logger.warning(
+                    "OPENAI_API_KEY is empty; using dummy key for local OpenAI-compatible endpoint."
+                )
+            else:
+                logger.error(
+                    "WARNING: OPENAI_API_KEY environment variable not found. Please set it before using OpenAI services."
+                )
+                raise EnvironmentError("OPENAI_API_KEY environment variable not found.")
 
         openai_params = {
-            "base_url": base_url,
-            "api_key": api_key,
+            "base_url": self.base_url,
+            "api_key": self.api_key,
             "timeout": Timeout(TIMEOUT, connect=10.0),
             "max_retries": MAX_ATTEMPTS,
         }

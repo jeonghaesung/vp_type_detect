@@ -13,6 +13,7 @@ from bertrend import BERTREND_CONFIG, EMBEDDING_CONFIG
 stopwords_en_file = Path(__file__).parent.parent / "resources" / "stopwords-en.json"
 stopwords_fr_file = Path(__file__).parent.parent / "resources" / "stopwords-fr.json"
 stopwords_rte_file = Path(__file__).parent.parent / "resources" / "stopwords-rte.json"
+stopwords_ko_file = Path(__file__).parent.parent / "resources" / "stopwords-ko.json"
 common_ngrams_file = Path(__file__).parent.parent / "resources" / "common_ngrams.json"
 with open(stopwords_en_file, "r", encoding="utf-8") as file:
     ENGLISH_STOPWORDS = json.load(file)
@@ -20,6 +21,8 @@ with open(stopwords_fr_file, "r", encoding="utf-8") as file:
     FRENCH_STOPWORDS = json.load(file)
 with open(stopwords_rte_file, "r", encoding="utf-8") as file:
     STOP_WORDS_RTE = json.load(file)
+with open(stopwords_ko_file, "r", encoding="utf-8") as file:
+    KOREAN_STOPWORDS = json.load(file)
 with open(common_ngrams_file, "r", encoding="utf-8") as file:
     COMMON_NGRAMS = json.load(file)
 
@@ -49,6 +52,9 @@ FRENCH_EMBEDDING_MODELS = [
     "dangvantuan/sentence-camembert-large",
     "antoinelouis/biencoder-distilcamembert-mmarcoFR",
 ]
+KOREAN_EMBEDDING_MODELS = [
+    "Qwen/Qwen3-Embedding-4B",
+]
 
 # MODEL REPRESENTATIONS
 MMR_REPRESENTATION_MODEL = "MaximalMarginalRelevance"
@@ -57,7 +63,7 @@ OPENAI_REPRESENTATION_MODEL = "OpenAI"
 
 # BERTopic Hyperparameters
 BERTOPIC_SERIALIZATION = "safetensors"  # or pickle
-LANGUAGES = ["French", "English"]
+LANGUAGES = ["French", "English", "Korean"]
 REPRESENTATION_MODELS = [
     MMR_REPRESENTATION_MODEL,
     KEYBERTINSPIRED_REPRESENTATION_MODEL,

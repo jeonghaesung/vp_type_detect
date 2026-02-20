@@ -2,6 +2,8 @@
 #  See AUTHORS.txt
 #  SPDX-License-Identifier: MPL-2.0
 #  This file is part of BERTrend.
+import importlib
+import importlib.util
 from pathlib import Path
 
 import numpy as np
@@ -26,6 +28,7 @@ from bertrend.config.parameters import (
     KEYBERT_NR_REPR_DOCS,
     KEYBERT_TOP_N_WORDS,
     KEYBERTINSPIRED_REPRESENTATION_MODEL,
+    KOREAN_STOPWORDS,
     MMR_REPRESENTATION_MODEL,
     OPENAI_NR_DOCS,
     OPENAI_REPRESENTATION_MODEL,
@@ -148,13 +151,20 @@ class BERTopicModel:
             )
 
         # Load stop words list
-        if self.config["vectorizer_model"].get("stop_words"):
-            stop_words = (
-                STOPWORDS
-                if self.config["global"]["language"] == "French"
-                else ENGLISH_STOPWORDS
-            )
-            self.config["vectorizer_model"]["stop_words"] = stop_words
+        stop_words_config = self.config["vectorizer_model"].get("stop_words")
+        if isinstance(stop_words_config, bool):
+            if stop_words_config:
+                language = self.config["global"]["language"]
+                if language == "French":
+                    stop_words = STOPWORDS
+                elif language == "Korean":
+                    stop_words = KOREAN_STOPWORDS
+                else:
+                    stop_words = ENGLISH_STOPWORDS
+                self.config["vectorizer_model"]["stop_words"] = stop_words
+            else:
+                # sklearn CountVectorizer does not accept bool for stop_words
+                self.config["vectorizer_model"]["stop_words"] = None
 
         # BERTopic needs a "None" instead of an empty list, otherwise it'll attempt zeroshot topic modeling on an empty list
         if not self.config["bertopic_model"].get("zeroshot_topic_list"):  # empty list
@@ -165,11 +175,40 @@ class BERTopicModel:
 
         self.hdbscan_model = HDBSCAN(**self.config["hdbscan_model"])
 
-        self.vectorizer_model = CountVectorizer(**self.config["vectorizer_model"])
+        vectorizer_config = self.config["vectorizer_model"].copy()
+        if self.config["global"]["language"] == "Korean":
+            vectorizer_config["tokenizer"] = self._get_korean_tokenizer()
+            vectorizer_config["token_pattern"] = None
+
+        self.vectorizer_model = CountVectorizer(**vectorizer_config)
 
         self.ctfidf_model = ClassTfidfTransformer(**self.config["ctfidf_model"])
 
         self.mmr_model = MaximalMarginalRelevance(**self.config["mmr_model"])
+
+    @staticmethod
+    def _get_korean_tokenizer():
+        mecab_spec = importlib.util.find_spec("mecab")
+        if mecab_spec is None:
+            raise ModuleNotFoundError(
+                "Korean tokenization requires mecab-python3. "
+                "Please install `mecab-python3` in the runtime environment."
+            )
+
+        mecab_module = importlib.import_module("mecab")
+        mecab_tagger = mecab_module.MeCab()
+
+        def mecab_tokenize(text: str) -> list[str]:
+            tokens = []
+            node = mecab_tagger.parseToNode(text)
+            while node is not None:
+                surface = node.surface.strip()
+                if surface:
+                    tokens.append(surface)
+                node = node.next
+            return tokens
+
+        return mecab_tokenize
 
     def _initialize_openai_representation(self):
         return OpenAI(

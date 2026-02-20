@@ -15,6 +15,7 @@ from bertrend.config.parameters import (
     EMBEDDING_DTYPES,
     ENGLISH_EMBEDDING_MODELS,
     FRENCH_EMBEDDING_MODELS,
+    KOREAN_EMBEDDING_MODELS,
     LANGUAGES,
     MMR_REPRESENTATION_MODEL,
     REPRESENTATION_MODELS,
@@ -45,8 +46,13 @@ def display_local_embeddings():
         key="embedding_dtype",
         on_change=save_widget_state,
     )
-    embedding_models = (
-        ENGLISH_EMBEDDING_MODELS if language == "English" else FRENCH_EMBEDDING_MODELS
+    embedding_models_by_language = {
+        "English": ENGLISH_EMBEDDING_MODELS,
+        "French": FRENCH_EMBEDDING_MODELS,
+        "Korean": KOREAN_EMBEDDING_MODELS,
+    }
+    embedding_models = embedding_models_by_language.get(
+        language, ENGLISH_EMBEDDING_MODELS
     )
     st.selectbox(
         translate("embedding_model"),
@@ -67,7 +73,11 @@ def display_remote_embeddings():
     """UI settings for remote embedding service"""
     register_widget("embedding_service_url")
     if "embedding_service_url" not in st.session_state:
-        st.session_state["embedding_service_url"] = EMBEDDING_CONFIG["url"]
+        default_url = EMBEDDING_CONFIG.get("url", "")
+        # Keep URL empty when no environment value is provided
+        st.session_state["embedding_service_url"] = (
+            "" if str(default_url).startswith("$") else default_url
+        )
     st.text_input(
         translate("embedding_service_url"),
         key="embedding_service_url",
@@ -81,7 +91,9 @@ def display_embedding_hyperparameters():
     with st.expander(translate("embedding_hyperparameters"), expanded=False):
         register_widget("embedding_service_type")
         if "embedding_service_type" not in st.session_state:
-            st.session_state["embedding_service_type"] = "remote"
+            st.session_state["embedding_service_type"] = (
+                "local" if EMBEDDING_CONFIG.get("use_local", True) else "remote"
+            )
         st.segmented_control(
             translate("embedding_service"),
             selection_mode="single",

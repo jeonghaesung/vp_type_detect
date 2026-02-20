@@ -14,6 +14,7 @@ import streamlit as st
 
 from bertrend.demos.demos_utils.i18n import (
     create_internationalization_language_selector,
+    get_current_internationalization_language,
     translate,
 )
 from bertrend.demos.demos_utils.icons import (
@@ -28,8 +29,20 @@ from bertrend.demos.demos_utils.state_utils import restore_widget_state
 LAYOUT = "wide"
 
 
-# Set locale for French date names
-locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
+
+
+def _set_date_locale() -> None:
+    locale_by_language = {
+        "fr": "fr_FR.UTF-8",
+        "en": "en_US.UTF-8",
+        "ko": "ko_KR.UTF-8",
+    }
+    selected_language = get_current_internationalization_language()
+    selected_locale = locale_by_language.get(selected_language, "en_US.UTF-8")
+    try:
+        locale.setlocale(locale.LC_TIME, selected_locale)
+    except locale.Error:
+        locale.setlocale(locale.LC_TIME, "")
 
 
 def define_pages():
@@ -86,6 +99,7 @@ def main():
 
     # Add language selector to sidebar
     create_internationalization_language_selector()
+    _set_date_locale()
 
     pg.run()
 
